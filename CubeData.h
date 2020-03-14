@@ -93,22 +93,70 @@ private:
   };
 
 
+  float verticesNormal[216] = {
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+  };
+
 
 
 
   unsigned int _texturedCubeVAO, _texturedCubeVBO;
   unsigned int _simpleCubeVAO, _simpleCubeVBO;
+  unsigned int _CubeNormalVAO, _CubeNormalVBO;
   void _GenerateTextturedCubeVAO();
   void _GenerateSimpleCubeVAO();
+  void _GenerateNormalCubeVAO();
 
 public : 
   CubeData()
   {
     _GenerateTextturedCubeVAO();
     _GenerateSimpleCubeVAO();
+    _GenerateNormalCubeVAO();
   }
   unsigned int& _getTexturedCubeVAO();
   unsigned int& _getSimpleCubeVAO();
+  unsigned int& _getCubeNormalVAO();
   
 };
 
@@ -120,6 +168,11 @@ unsigned int& CubeData::_getTexturedCubeVAO()
 unsigned int& CubeData::_getSimpleCubeVAO()
 {
   return _simpleCubeVAO;
+}
+
+unsigned int& CubeData::_getCubeNormalVAO()
+{
+  return _CubeNormalVAO;
 }
 
 void CubeData::_GenerateTextturedCubeVAO()
@@ -167,6 +220,32 @@ void CubeData::_GenerateSimpleCubeVAO()
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
+
+
+void CubeData::_GenerateNormalCubeVAO()
+{
+  // 1. Generate
+  glGenVertexArrays(1, &_CubeNormalVAO);
+  glGenBuffers(1, &_CubeNormalVBO);
+  // 2. Bind 
+  glBindVertexArray(_CubeNormalVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, _CubeNormalVBO);
+
+  // 3. Attach Data
+  glBufferData(GL_ARRAY_BUFFER, sizeof(verticesNormal), verticesNormal, GL_STATIC_DRAW);
+
+  // 4. Set VAO index
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0); // 5. Enable Vertex Attrib Array.
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1); // 5. Enable Vertex Attrib Array.
+
+  // 6. Unbind
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+}
+
 
 
 
